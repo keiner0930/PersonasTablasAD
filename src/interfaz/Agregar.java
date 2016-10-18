@@ -8,7 +8,13 @@ package interfaz;
 
 import clases.Helper;
 import clases.Persona;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,10 +26,22 @@ public class Agregar extends javax.swing.JDialog {
     /**
      * Creates new form Agregar
      */
+    String ruta;
     ArrayList<Persona>personas;
+    ObjectOutputStream salida;
+    
     public Agregar(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        initComponents();personas= new ArrayList();
+        initComponents();
+        ruta = "src/datos/personas.txt";
+        try {
+            personas = Helper.traerDatos(ruta);
+            salida = new ObjectOutputStream(new FileOutputStream(ruta));
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        Helper.volcado(salida, personas);
+        Helper.llenarTabla(tblTablaPersonas, ruta);
     }
 
     /**
@@ -148,21 +166,27 @@ public class Agregar extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmdGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGuardarActionPerformed
-    String cedula,nombre,apellido;
+    String cedula, nombre, apellido;
+        cedula = txtCedula.getText();
+        nombre = txtNombre.getText();
+        apellido = txtApellido.getText();
+
+        Persona p = new Persona(cedula, nombre, apellido);
+        try {
+            p.guardar(salida);
+        } catch (IOException ex) {
+            Logger.getLogger(Agregar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Helper.llenarTabla(tblTablaPersonas, ruta);
+
+        txtCedula.setText("");
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtCedula.requestFocusInWindow();
+
+
     
-    cedula=txtCedula.getText();
-    nombre=txtNombre.getText();
-    apellido=txtApellido.getText();
-    
-    Persona p= new Persona(cedula,nombre,apellido);
-    personas.add(p);
-    
-    Helper.llenarTabla(tblTablaPersonas, personas);
-    
-    txtCedula.setText("");
-    txtNombre.setText("");
-    txtApellido.setText("");
-    txtCedula.requestFocusInWindow();
     }//GEN-LAST:event_cmdGuardarActionPerformed
 
     private void cmdLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLimpiarActionPerformed
@@ -176,6 +200,7 @@ public class Agregar extends javax.swing.JDialog {
     int i;
     Persona p;
     i=tblTablaPersonas.getSelectedRow();
+    ArrayList<Persona> personas = Helper.traerDatos(ruta);
     p= personas.get(i);
     
     txtCedula.setText(p.getCedula());
@@ -184,21 +209,29 @@ public class Agregar extends javax.swing.JDialog {
     }//GEN-LAST:event_tblTablaPersonasMouseClicked
 
     private void cmdEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEliminarActionPerformed
-    int i,op;
-    op= JOptionPane.showConfirmDialog(this, "Seguro que desea eliminar a esta persona","Eliminar",JOptionPane.YES_NO_OPTION);
-    if(op==JOptionPane.YES_OPTION){        
-    i=tblTablaPersonas.getSelectedRow();
-     
-    personas.remove(i);
-    Helper.llenarTabla(tblTablaPersonas, personas);
+    int i, op;
+        op = JOptionPane.showConfirmDialog(this, "¿Seguro que desea eliminar a esta persona?", "Eliminar", JOptionPane.YES_NO_OPTION);
+        
+        ArrayList<Persona> personas = Helper.traerDatos(ruta);
+        if (op == JOptionPane.YES_OPTION) {
+            i = tblTablaPersonas.getSelectedRow();
+            personas.remove(i);
+            try {
+                salida = new ObjectOutputStream(new FileOutputStream(ruta));
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Agregar.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Agregar.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Helper.volcado(salida, personas);
+            Helper.llenarTabla(tblTablaPersonas, ruta);
+            txtCedula.setText("");
+            txtNombre.setText("");
+            txtApellido.setText("");
+            txtCedula.requestFocusInWindow();
+        }
+
     
-    txtCedula.setText("");
-    txtNombre.setText("");
-    txtApellido.setText("");
-    txtCedula.requestFocusInWindow();
-    }else{
-    
-    }
     }//GEN-LAST:event_cmdEliminarActionPerformed
 
     /**
