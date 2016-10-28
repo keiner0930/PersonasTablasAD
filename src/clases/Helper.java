@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package clases;
-
 
 import java.awt.Component;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -23,10 +22,11 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author karrieta9
+ * @author rmorales1
  */
 public class Helper {
- public static void mensaje(Component ventana, String mensaje, int tipo) {
+
+    public static void mensaje(Component ventana, String mensaje, int tipo) {
         switch (tipo) {
             case 1:
                 JOptionPane.showMessageDialog(ventana, mensaje, "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -43,18 +43,13 @@ public class Helper {
 
     public static void limpiadoTabla(JTable tabla1) {
         int nf, nc;
-
         nc = tabla1.getColumnCount();
         nf = tabla1.getRowCount();
-
         for (int i = 0; i < nf; i++) {
             for (int j = 0; j < nc; j++) {
                 tabla1.setValueAt("", i, j);
-
             }
-
         }
-
     }
 
     public static void porDefectoTabla(JTable tabla1) {
@@ -62,26 +57,26 @@ public class Helper {
         tm = (DefaultTableModel) tabla1.getModel();
         tm.setColumnCount(0);
         tm.setRowCount(0);
-
     }
 
     public static void habilitarBotones(JButton[] botones) {
         for (int i = 0; i < botones.length; i++) {
             botones[i].setEnabled(true);
+
         }
     }
 
     public static void deshabilitarBotones(JButton[] botones) {
         for (int i = 0; i < botones.length; i++) {
             botones[i].setEnabled(false);
-        }
 
+        }
     }
 
     public static int cantidadPares(JTable tabla1) {
-        int op, nf, nc, aux, cont = 0;
-        nf = tabla1.getRowCount();
+        int nf, nc, aux, cont = 0;
         nc = tabla1.getColumnCount();
+        nf = tabla1.getRowCount();
 
         for (int i = 0; i < nf; i++) {
             for (int j = 0; j < nc; j++) {
@@ -89,17 +84,15 @@ public class Helper {
                 if (aux % 2 == 0) {
                     cont++;
                 }
-
             }
-
         }
         return cont;
     }
 
     public static void pares(JTable tabla1, JTable tabla2) {
         int nf, nc, aux;
-        nf = tabla1.getRowCount();
         nc = tabla1.getColumnCount();
+        nf = tabla1.getRowCount();
 
         for (int i = 0; i < nf; i++) {
             for (int j = 0; j < nc; j++) {
@@ -107,17 +100,15 @@ public class Helper {
                 if (aux % 2 == 0) {
                     tabla2.setValueAt(aux, i, j);
                 }
-
             }
 
         }
-
     }
 
     public static void letraC(JTable tabla1, JTable tabla2) {
         int nf, nc, aux;
-        nf = tabla1.getRowCount();
         nc = tabla1.getColumnCount();
+        nf = tabla1.getRowCount();
 
         for (int i = 0; i < nf; i++) {
             for (int j = 0; j < nc; j++) {
@@ -125,17 +116,15 @@ public class Helper {
                 if (i == 0 || i == nf - 1 || j == 0) {
                     tabla2.setValueAt(aux, i, j);
                 }
-
             }
 
         }
-
     }
 
     public static void diagonalPrincipal(JTable tabla1, JTable tabla2) {
         int nf, nc, aux;
-        nf = tabla1.getRowCount();
         nc = tabla1.getColumnCount();
+        nf = tabla1.getRowCount();
 
         for (int i = 0; i < nf; i++) {
             for (int j = 0; j < nc; j++) {
@@ -143,29 +132,25 @@ public class Helper {
                 if (i == j) {
                     tabla2.setValueAt(aux, i, j);
                 }
-
             }
 
         }
-
     }
 
     public static void letraH(JTable tabla1, JTable tabla2) {
         int nf, nc, aux;
-        nf = tabla1.getRowCount();
         nc = tabla1.getColumnCount();
+        nf = tabla1.getRowCount();
 
         for (int i = 0; i < nf; i++) {
             for (int j = 0; j < nc; j++) {
                 aux = (int) tabla1.getValueAt(i, j);
-                if (j == 0 || j == nf - 1 || i == nc / 2) {
+                if (j == 0 || j == nc - 1 || i == (nf - 1) / 2) {
                     tabla2.setValueAt(aux, i, j);
                 }
-
             }
 
         }
-
     }
 
     public static int[][] pasoDeDatos(JTable tabla1) {
@@ -195,6 +180,16 @@ public class Helper {
         return aux;
 
     }
+    
+     public static String recorridoHaciaArriba(int[][] m, int j, int in, int fin) {
+      
+        String aux = "";
+        for (int i = in; i >= fin; i--) {
+            aux = aux + m[i][j] + ", ";
+        }
+        return aux;
+
+    }
 
     public static String recorridoHaciaAbajo(int[][] m, int j) {
         int nf = m.length;
@@ -202,8 +197,18 @@ public class Helper {
         for (int i = 0; i < nf; i++) {
             aux = aux + m[i][j] + ", ";
         }
-
         return aux;
+
+    }
+    
+     public static String recorridoHaciaAbajo(int[][] m, int j, int in, int fin) {
+      
+        String aux = "";
+        for (int i = in; i < fin; i++) {
+            aux = aux + m[i][j] + ", ";
+        }
+        return aux;
+
     }
 
     public static String recorridoUno(JTable tabla1) {
@@ -221,47 +226,46 @@ public class Helper {
         return aux;
     }
     
-   public static String recorridoHaciaIzquierda(int[][] m, int i) {
+    public static String recorridoHaciaIzquierda(int[][] m, int i) {
         int nc = m[0].length;
         String aux = "";
-        for (int j = nc - 1; j >= 0; j--) {
+        for (int j = nc-1; j >= 0; j--) {
             aux = aux + m[i][j] + ", ";
         }
-
         return aux;
-    } 
-   
-    public static String recorridoHaciaIzquierda(int[][] m, int i, int in, int fin) {
-         
-        String aux = "";
-         for (int j =in; j >= fin; j--) {
-             aux = aux + m[i][j] + ", ";
-         }
-         return aux;
- 
-     }
+
+    }
     
-   public static String recorridoHaciaDerecha(int[][] m, int i) {
+     public static String recorridoHaciaIzquierda(int[][] m, int i, int in, int fin) {
+        
+        String aux = "";
+        for (int j =in; j >= fin; j--) {
+            aux = aux + m[i][j] + ", ";
+        }
+        return aux;
+
+    }
+    public static String recorridoHaciaDerecha(int[][] m, int i) {
         int nc = m[0].length;
         String aux = "";
         for (int j = 0; j < nc; j++) {
             aux = aux + m[i][j] + ", ";
         }
-
         return aux;
-    } 
-   
-   public static String recorridoHaciaDerecha(int[][] m, int i,int in, int fin) {
-        
-         String aux = "";
-         for (int j = in; j < fin; j++) {
-             aux = aux + m[i][j] + ", ";
-         }
-         return aux;
- 
-     }
-   
-   public static String recorridoDos(JTable tabla1){
+
+    }
+    
+    public static String recorridoHaciaDerecha(int[][] m, int i,int in, int fin) {
+       
+        String aux = "";
+        for (int j = in; j < fin; j++) {
+            aux = aux + m[i][j] + ", ";
+        }
+        return aux;
+
+    }
+    
+    public static String recorridoDos(JTable tabla1){
         int m[][] = pasoDeDatos(tabla1);
         int nf = m.length;
         String aux="";
@@ -275,9 +279,9 @@ public class Helper {
         }
         aux = aux.substring(0, aux.length()-2)+".";
         return aux;
-    }  
-   
-  public static void llenarTabla(JTable tabla, String ruta){
+    }
+    
+    public static void llenarTabla(JTable tabla, String ruta){
         DefaultTableModel tm;
         int nf;
         ArrayList<Persona> personas = traerDatos(ruta);
@@ -290,10 +294,27 @@ public class Helper {
            tabla.setValueAt(personas.get(i).getCedula(), i, 1);
            tabla.setValueAt(personas.get(i).getNombre(), i, 2);
            tabla.setValueAt(personas.get(i).getApellido(), i, 3);
+            tabla.setValueAt(personas.get(i).getSexo(), i, 4);
         }
     }
-   
-  public static ArrayList traerDatos(String ruta){
+    
+    public static void llenarTabla(JTable tabla, ArrayList<Persona> personas){
+        DefaultTableModel tm;
+        int nf;
+        tm = (DefaultTableModel)tabla.getModel();
+        limpiadoTabla(tabla);
+        nf = personas.size();
+        tm.setRowCount(nf);
+        for (int i = 0; i < nf; i++) {
+           tabla.setValueAt(i+1, i, 0);
+           tabla.setValueAt(personas.get(i).getCedula(), i, 1);
+           tabla.setValueAt(personas.get(i).getNombre(), i, 2);
+           tabla.setValueAt(personas.get(i).getApellido(), i, 3);
+            tabla.setValueAt(personas.get(i).getSexo(), i, 4);
+        }
+    }
+    
+    public static ArrayList traerDatos(String ruta){
         FileInputStream archivo;
         ObjectInputStream entrada;
         ArrayList personas = new ArrayList();
@@ -312,19 +333,32 @@ public class Helper {
         } catch (ClassNotFoundException ex) {
              System.out.println(ex.getMessage());
         }
-        
-        return personas;
+           return personas;
     } 
-   
-   public static void volcado(ObjectOutputStream salida,ArrayList personas ){
-         for (int i = 0; i < personas.size(); i++) {
+    
+    public static void volcado(ObjectOutputStream salida,ArrayList personas ){
+        for (int i = 0; i < personas.size(); i++) {
             try {
                 salida.writeObject(personas.get(i));
-             } catch (IOException ex) {
-                 System.out.println(ex.getMessage());
-             }
-             
-         }
-     }
-   
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+            
+        }
+    }
+    
+    public static void listadoPorSexo(JTable tabla, String ruta, String sexo ){
+        ArrayList<Persona> personas = traerDatos(ruta);
+        ArrayList<Persona> personasFiltradas = new ArrayList();
+        for (int i = 0; i < personas.size(); i++) {
+          if(personas.get(i).getSexo().equals(sexo)){
+              personasFiltradas.add(personas.get(i));
+          }
+            
+        }
+        llenarTabla(tabla, personasFiltradas);
+        
+    }
+    
+
 }
